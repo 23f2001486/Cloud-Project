@@ -1,28 +1,17 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import React from "react"
 
 export default function LoginPage() {
-  const { login } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    await login(email, password)
-    if (email.includes('admin')) navigate('/admin')
-    else navigate('/student')
+  const handleGoogleLogin = () => {
+    // Replace with your backend Google login route
+    window.location.href = "http://localhost:3000/auth/google"
   }
 
   return (
-    <div className="container mt-5">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" className="form-control my-2" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" className="form-control my-2" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button className="btn btn-primary w-100">Login</button>
-      </form>
+    <div className="container d-flex flex-column align-items-center justify-content-center vh-100">
+      <h2 className="mb-4">Login</h2>
+      <button className="btn btn-danger" onClick={handleGoogleLogin}>
+        <i className="bi bi-google me-2"></i> Sign in with Google
+      </button>
     </div>
   )
 }

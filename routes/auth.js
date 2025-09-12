@@ -10,16 +10,20 @@ router.get(
 );
 
 // Google callback route (with session enabled)
-router.get(
-  '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/auth/fail', session: true }), 
+router.get("/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.json({
-      auth: "Authentication_successful",
-      user: req.user, // passport gives you user here
-    });
+    // If using session
+    res.redirect("http://localhost:5173/post-login")
   }
-);
+)
+router.get('/me', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ user: req.user });
+  } else {
+    res.json({ user: null });
+  }
+});
 
 // Failure route
 router.get('/auth/fail', (req, res) => {
