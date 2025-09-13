@@ -13,10 +13,11 @@ router.get(
 router.get("/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    // If using session
-    res.redirect("http://localhost:5173/post-login")
+    setTimeout(() => {
+      res.redirect("/post-login");
+    }, 500); // 500ms delay
   }
-)
+);
 router.get('/me', (req, res) => {
   if (req.isAuthenticated()) {
     res.json({ user: req.user });
