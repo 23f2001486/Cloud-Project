@@ -4,7 +4,8 @@ import mongoose from 'mongoose'
 import session from 'express-session';
 import passport from './config/passport.js';
 import complaintRoutes from "./routes/complaint.js";
-import authRoutes from "./routes/auth.js"
+import authRoutes from "./routes/auth.js";
+import UserRoutes from "./routes/user.js";
 //import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -47,8 +48,14 @@ console.log(process.env.CLOUDINARY_API_KEY);
 console.log(process.env.CLOUDINARY_API_SECRET);
 app.use("/complaints", complaintRoutes);
 app.use("/auth",authRoutes);
+app.use("/users",UserRoutes);
 
-// Serve index.html for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'my-app', 'build', 'index.html'));
+app.get('/*path', (req, res, next) => {
+  const filePath = path.join(__dirname, 'my-app', 'build', 'index.html');
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('Error sending index.html:', err);
+      next(err);
+    }
+  });
 });

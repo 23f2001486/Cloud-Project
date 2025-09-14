@@ -16,7 +16,7 @@ export async function googleAuthCallback(req, accessToken, refreshToken, profile
         googleId: profile.id,
         name: profile.displayName,
         email: email,
-        profilePic: profile.photos?.[0]?.value || null,
+         profilePic: profile.picture || profile.photos?.[0]?.value || null,
         role: isAdmin ? "admin" : "student", 
       });
     }
