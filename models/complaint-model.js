@@ -24,7 +24,7 @@ const complaintSchema = new mongoose.Schema({
   feedback:{
     type:String,
     enum: ["Good", "Poor", "Unsatisfactory"],
-  default: "Unsatisfactory"
+  default: null
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

@@ -1,11 +1,11 @@
 import User from '../models/user-model.js';
-import Admin from '../models/admin-model.js'; // Import your admin model
+import Admin from '../models/admin-model.js'; 
 
 export async function googleAuthCallback(req, accessToken, refreshToken, profile, done) {
   try {
     console.log("Google Profile:", profile); // DEBUG
 
-    // Check if the email is in the Admin collection
+   
     const email = profile.emails?.[0]?.value || null;
     const isAdmin = await Admin.findOne({ email });
 

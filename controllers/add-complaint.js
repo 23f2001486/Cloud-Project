@@ -25,7 +25,7 @@ const complaint = new Complaint({
     : null
 });
 
-await complaint.save(); // Corrected: only save once
+await complaint.save(); 
 
 if (req.file) { // Corrected: only unlink if a file exists
   fs.unlinkSync(req.file.path);

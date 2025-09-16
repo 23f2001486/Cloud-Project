@@ -49,12 +49,13 @@ export default function AddComplaint() {
        <div className="container-fluid d-flex justify-content-between align-items-center">
          <div>
            <h4 className="text-white mb-0 fw-bold"> Hostel Management</h4>
-           <small className="text-light">Empowering student living, one complaint at a time</small>
+           <small className="text-light">Focus on Your Studies, Leave the Rest to Us</small>
          </div>
          <div>
            <Link className="btn btn-light me-2" to="/student">Dashboard</Link>
            <Link className="btn btn-outline-light me-2" to="/student/add-complaint">+ Add Complaint</Link>
            <Link className="btn btn-light me-2" to={`/student/profile/${user._id}`}>View Profile</Link>
+           <Link className="btn btn-light me-2" to={`/about`}>About</Link>
          </div>
        </div>
      </header>
@@ -109,6 +110,10 @@ export default function AddComplaint() {
           </button>
         </form>
       </div>
+      <footer className="text-center mt-5 py-3">
+        © {new Date().getFullYear()} Hostel Complaint Management System. All
+        rights reserved.
+      </footer>
     </div>
   );
 }

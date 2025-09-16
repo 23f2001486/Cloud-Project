@@ -6,8 +6,8 @@ export const changeStatus = async (req,res)=>{
 
     const updatedComplaint = await Complaint.findByIdAndUpdate(
       id,
-      { status },                        // Update only status
-      { new: true }                      // Return updated document
+      { status },                        
+      { new: true }                      
     );
 
     if (!updatedComplaint) {

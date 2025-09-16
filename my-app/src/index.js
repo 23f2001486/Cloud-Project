@@ -9,6 +9,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
 import AddComplaint from "./pages/AddComplaint"; 
 import UserProfile from"./pages/Profile";
+import AboutPage from "./pages/about";
+import User from "./pages/adminProfile";
+import AdminAbout from "./pages/adminAbout";
 
 import "./styles/theme.css";
 import "./index.css";
@@ -25,6 +28,10 @@ root.render(
           <Route path="/student" element={<StudentDashboard />} />
            <Route path="/student/add-complaint" element={<AddComplaint />} />
             <Route path="/student/profile/:id" element={<UserProfile />} />
+            <Route path="/about" element={<AboutPage />}/>
+            <Route path="/admin/profile/:id" element={<User />} />
+            <Route path="/admin" element={<AdminDashboard />}/>
+            <Route path="/admin/about" element={<AdminAbout />}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -16,11 +16,14 @@ export const createComplaint = (formData) => axios.post(`/complaints/create`, fo
     'Content-Type': 'multipart/form-data',
   },
 });
-export const updateComplaint = (id, formData) => axios.put(`/complaints/edit/${id}`, formData, {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
-});
+// services/api.js
+export const updateComplaint = (id, data) =>
+  axios.put(`/complaints/edit/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
 export const deleteComplaint = (id) => axios.delete(`/complaints/delete/${id}`);
 
 // Added for changing complaint status

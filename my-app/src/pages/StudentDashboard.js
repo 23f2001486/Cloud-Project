@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { getComplaints, addFeedback, deleteComplaint } from "../services/api";
-import { Link } from "react-router-dom"; // ✅ for navigation
+import {
+  getComplaints,
+  addFeedback,
+  deleteComplaint,
+  updateComplaint, // ✅ fixed for JSON
+} from "../services/api";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function StudentDashboard() {
@@ -8,6 +13,8 @@ export default function StudentDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [editingFeedbackId, setEditingFeedbackId] = useState(null);
   const [feedbackValue, setFeedbackValue] = useState("");
+  const [editingComplaintId, setEditingComplaintId] = useState(null);
+  const [editForm, setEditForm] = useState({});
 
   const fetchComplaints = async () => {
     try {
@@ -22,17 +29,16 @@ export default function StudentDashboard() {
     fetchComplaints();
   }, []);
 
- const handleFeedbackSave = async (id) => {
-  try {
-    await addFeedback(id, feedbackValue); // ✅ only pass the string
-    setEditingFeedbackId(null);
-    setFeedbackValue("");
-    fetchComplaints();
-  } catch (err) {
-    console.error("Error adding feedback:", err);
-  }
-};
-
+  const handleFeedbackSave = async (id) => {
+    try {
+      await addFeedback(id, feedbackValue);
+      setEditingFeedbackId(null);
+      setFeedbackValue("");
+      fetchComplaints();
+    } catch (err) {
+      console.error("Error adding feedback:", err);
+    }
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -43,22 +49,61 @@ export default function StudentDashboard() {
     }
   };
 
+  const handleEditComplaint = (complaint) => {
+    setEditingComplaintId(complaint._id);
+    setEditForm({
+      category: complaint.category,
+      description: complaint.description,
+      block_name: complaint.block_name,
+      floor: complaint.floor,
+      room_number: complaint.room_number,
+      status: complaint.status,
+    });
+  };
+
+  const handleSaveComplaint = async (id) => {
+    try {
+      await updateComplaint(id, editForm); // ✅ send JSON directly
+      setEditingComplaintId(null);
+      fetchComplaints();
+    } catch (err) {
+      console.error("Error updating complaint:", err);
+    }
+  };
+
   return (
     <div>
-      {/* ✅ Navigation Bar */}
+      {/* ✅ Navbar */}
       <header className="navbar navbar-custom py-3">
-  <div className="container-fluid d-flex justify-content-between align-items-center">
-    <div>
-      <h4 className="text-white mb-0 fw-bold"> Hostel Management</h4>
-      <small className="text-light">Empowering student living, one complaint at a time</small>
-    </div>
-    <div>
-      <Link className="btn btn-light me-2" to="/student">Dashboard</Link>
-      <Link className="btn btn-outline-light me-2" to="/student/add-complaint">+ Add Complaint</Link>
-      <Link className="btn btn-light me-2" to={`/student/profile/${user._id}`}>View Profile</Link>
-    </div>
-  </div>
-</header>
+        <div className="container-fluid d-flex justify-content-between align-items-center">
+          <div>
+            <h4 className="text-white mb-0 fw-bold"> Hostel Management</h4>
+            <small className="text-light">
+              Focus on Your Studies, Leave the Rest to Us
+            </small>
+          </div>
+          <div>
+            <Link className="btn btn-light me-2" to="/student">
+              Dashboard
+            </Link>
+            <Link
+              className="btn btn-outline-light me-2"
+              to="/student/add-complaint"
+            >
+              + Add Complaint
+            </Link>
+            <Link
+              className="btn btn-light me-2"
+              to={`/student/profile/${user._id}`}
+            >
+              View Profile
+            </Link>
+            <Link className="btn btn-light me-2" to={`/about`}>
+              About
+            </Link>
+          </div>
+        </div>
+      </header>
 
       <div className="container mt-4">
         <h2 className="text-primary mb-3"> All Complaints</h2>
@@ -71,78 +116,190 @@ export default function StudentDashboard() {
               <div className="col-md-6 mb-3" key={c._id}>
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    <h5 className="card-title text-primary">{c.category}</h5>
-                    <p className="card-text">{c.description}</p>
-                    <p className="text-muted">
-                      Block {c.block_name}, Floor {c.floor}, Room {c.room_number}
-                    </p>
-                    {c.image?.url && (
-  <div className="my-2">
-    <img
-      src={c.image.url}
-      alt="Complaint"
-      className="img-fluid rounded"
-      style={{ maxHeight: "200px", objectFit: "cover" }}
-    />
-  </div>
-)}
+                    {editingComplaintId === c._id ? (
+                      /* ✅ Edit Form */
+                      <div>
+                        <div className="mb-2">
+                          <label className="form-label">Category</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={editForm.category}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                category: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="mb-2">
+                          <label className="form-label">Description</label>
+                          <textarea
+                            className="form-control"
+                            rows="3"
+                            value={editForm.description}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                description: e.target.value,
+                              })
+                            }
+                          ></textarea>
+                        </div>
+                        <div className="mb-2">
+                          <label className="form-label">Block</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={editForm.block_name}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                block_name: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="mb-2">
+                          <label className="form-label">Floor</label>
+                          <input
+                            type="number"
+                            className="form-control"
+                            value={editForm.floor}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                floor: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="mb-2">
+                          <label className="form-label">Room Number</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={editForm.room_number}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                room_number: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
 
-                    <p>
-                      <strong>Status:</strong> {c.status}
-                    </p>
+                        <button
+                          className="btn btn-success btn-sm me-2"
+                          onClick={() => handleSaveComplaint(c._id)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => setEditingComplaintId(null)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      /* ✅ Normal View */
+                      <>
+                        <h5 className="card-title text-primary">
+                          {c.category}
+                        </h5>
+                        <p className="card-text">{c.description}</p>
+                        <p className="text-muted">
+                          Block {c.block_name}, Floor {c.floor}, Room{" "}
+                          {c.room_number}
+                        </p>
 
-                    {/* Feedback Section */}
-{editingFeedbackId === c._id ? (
-  <div className="mt-2">
-    <select
-      className="form-select w-auto d-inline"
-      value={feedbackValue}
-      onChange={(e) => setFeedbackValue(e.target.value)}
-    >
-      <option value="Good">Good</option>
-      <option value="Poor">Poor</option>
-      <option value="Unsatisfactory">Unsatisfactory</option>
-    </select>
-    <button
-      className="btn btn-success btn-sm ms-2"
-      onClick={() => handleFeedbackSave(c._id)}
-    >
-      Save
-    </button>
-    <button
-      className="btn btn-secondary btn-sm ms-1"
-      onClick={() => setEditingFeedbackId(null)}
-    >
-      Cancel
-    </button>
-  </div>
-) : (
-  <div className="mt-2">
-    <strong>Feedback:</strong> {c.feedback}
-    {/* Show Edit button only if status is Resolved */}
-    {c.status === "Resolved" && (
-      <button
-        className="btn btn-outline-primary btn-sm ms-2"
-        onClick={() => {
-          setEditingFeedbackId(c._id);
-          setFeedbackValue(c.feedback || "-");
-        }}
-      >
-        Edit
-      </button>
-    )}
-  </div>
-)}
+                        {c.image?.url && (
+                          <div className="my-2">
+                            <img
+                              src={c.image.url}
+                              alt="Complaint"
+                              className="img-fluid rounded"
+                              style={{
+                                maxHeight: "200px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </div>
+                        )}
 
-                    {/* Delete Button */}
-                    <div className="mt-3">
-                      <button
-                        className="btn btn-outline-danger btn-sm"
-                        onClick={() => handleDelete(c._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
+                        <p>
+                          <strong>Status:</strong> {c.status}
+                        </p>
+
+                        {/* Feedback Section */}
+                        {editingFeedbackId === c._id ? (
+                          <div className="mt-2">
+                            <select
+                              className="form-select w-auto d-inline"
+                              value={feedbackValue}
+                              onChange={(e) =>
+                                setFeedbackValue(e.target.value)
+                              }
+                            >
+                              <option value="Good">Good</option>
+                              <option value="Poor">Poor</option>
+                              <option value="Unsatisfactory">
+                                Unsatisfactory
+                              </option>
+                            </select>
+                            <button
+                              className="btn btn-success btn-sm ms-2"
+                              onClick={() => handleFeedbackSave(c._id)}
+                            >
+                              Save
+                            </button>
+                            <button
+                              className="btn btn-secondary btn-sm ms-1"
+                              onClick={() => setEditingFeedbackId(null)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="mt-2">
+                            <strong>Feedback:</strong> {c.feedback}
+                            {c.status === "Resolved" && (
+                              <button
+                                className="btn btn-outline-primary btn-sm ms-2"
+                                onClick={() => {
+                                  setEditingFeedbackId(c._id);
+                                  setFeedbackValue(c.feedback || "-");
+                                }}
+                              >
+                                Edit Feedback
+                              </button>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Edit Complaint (only if not In Progress) */}
+                        {c.status !== "In Progress" && (
+                          <button
+                            className="btn btn-outline-warning btn-sm mt-2 me-2"
+                            onClick={() => handleEditComplaint(c)}
+                          >
+                            Edit Complaint
+                          </button>
+                        )}
+
+                        {/* Delete */}
+                        <div className="mt-2">
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => handleDelete(c._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -150,11 +307,11 @@ export default function StudentDashboard() {
           </div>
         )}
       </div>
-      <footer className="container-fluid d-flex justify-content-between align-items-center">
-  <div className="container">
-    <small>© 2025 Hostel Management System </small>
-  </div>
-</footer>
+
+      <footer className="text-center mt-5 py-3">
+        © {new Date().getFullYear()} Hostel Complaint Management System. All
+        rights reserved.
+      </footer>
     </div>
   );
 }
