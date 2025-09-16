@@ -38,7 +38,10 @@ export default function UserProfile() {
             <small className="text-light">Focus on Your Studies, Leave the Rest to Us</small>
           </div>
           <div>
-            <Link className="btn btn-light me-2" to="/admin">Dashboard</Link>
+            <Link className="btn btn-light me-2" to="/admin">Active Complaints</Link>
+            <Link className="btn btn-light me-2" to="/admin/resolves_complaints">
+              Resolved Complaints
+            </Link>
             <Link className="btn btn-light me-2" to={`/admin/profile/${user._id}`}>View Profile</Link>
             <Link className="btn btn-light me-2" to={`/admin/about`}>About</Link>
           </div>

@@ -280,24 +280,28 @@ export default function StudentDashboard() {
                         )}
 
                         {/* Edit Complaint (only if not In Progress) */}
-                        {c.status !== "In Progress" && (
-                          <button
-                            className="btn btn-outline-warning btn-sm mt-2 me-2"
-                            onClick={() => handleEditComplaint(c)}
-                          >
-                            Edit Complaint
-                          </button>
-                        )}
+                        {c.status === "Pending" && (
+  <>
+    {/* Edit */}
+    <button
+      className="btn btn-outline-warning btn-sm mt-2 me-2"
+      onClick={() => handleEditComplaint(c)}
+    >
+      Edit Complaint
+    </button>
 
-                        {/* Delete */}
-                        <div className="mt-2">
-                          <button
-                            className="btn btn-outline-danger btn-sm"
-                            onClick={() => handleDelete(c._id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
+    {/* Delete */}
+    <div className="mt-2">
+      <button
+        className="btn btn-outline-danger btn-sm"
+        onClick={() => handleDelete(c._id)}
+      >
+        Delete
+      </button>
+    </div>
+  </>
+)}
+
                       </>
                     )}
                   </div>

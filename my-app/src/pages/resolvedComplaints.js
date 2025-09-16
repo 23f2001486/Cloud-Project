@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
-import { getComplaints, changeStatus } from "../services/api";
+import { getComplaints } from "../services/api";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function ActiveComplaints() {
+export default function ResolvedComplaints() {
   const { user } = useAuth();
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pendingId, setPendingId] = useState(null);
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null);
-
-  // new states for search + sort
-  const [searchTerm, setSearchTerm] = useState("");
+  const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("recent");
 
   const fetchComplaints = async () => {
@@ -32,30 +28,16 @@ export default function ActiveComplaints() {
     fetchComplaints();
   }, []);
 
-  const handleChange = async (id, status) => {
-    setPendingId(id);
-    try {
-      const res = await changeStatus(id, status);
-      setMessage(res.data.message);
-      await fetchComplaints();
-    } catch (err) {
-      console.error("Error updating status:", err);
-      setError("Failed to update status");
-    } finally {
-      setPendingId(null);
-      setTimeout(() => setMessage(null), 3000);
-    }
-  };
-
-  // filter & sort active complaints
-  const activeComplaints = complaints
-    .filter((c) => c.status !== "Resolved")
-    .filter(
-      (c) =>
-        c.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.block_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+  const resolvedComplaints = complaints
+    .filter((c) => c.status === "Resolved")
+    .filter((c) => {
+      const keyword = search.toLowerCase();
+      return (
+        c.description.toLowerCase().includes(keyword) ||
+        c.category.toLowerCase().includes(keyword) ||
+        c.block_name.toLowerCase().includes(keyword)
+      );
+    })
     .sort((a, b) => {
       if (sortBy === "recent") return new Date(b.createdAt) - new Date(a.createdAt);
       if (sortBy === "oldest") return new Date(a.createdAt) - new Date(b.createdAt);
@@ -87,24 +69,24 @@ export default function ActiveComplaints() {
             <Link className="btn btn-light me-2" to={`/admin/profile/${user._id}`}>
               View Profile
             </Link>
-            <Link className="btn btn-light me-2" to={`/admin/about`}>
-              About
-            </Link>
+            <Link className="btn btn-light me-2" to={`/admin/about`}>About</Link>
           </div>
         </div>
       </header>
 
       <div className="container mt-4">
-        <h2 className="mb-4">Active Complaints</h2>
+        <h2 className="mb-4">Resolved Complaints</h2>
 
-        {/* Search + Sort Controls */}
+        {error && <div className="alert alert-accent">{error}</div>}
+
+        {/* Search + Sort */}
         <div className="d-flex mb-3">
           <input
             type="text"
             className="form-control me-2"
-            placeholder="Search by category, block, description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search complaints..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <select
             className="form-select"
@@ -118,14 +100,11 @@ export default function ActiveComplaints() {
           </select>
         </div>
 
-        {error && <div className="alert alert-accent">{error}</div>}
-        {message && <div className="alert alert-primary">{message}</div>}
-
-        {activeComplaints.length === 0 ? (
-          <p>No active complaints found.</p>
+        {resolvedComplaints.length === 0 ? (
+          <p>No resolved complaints found.</p>
         ) : (
           <div className="card">
-            <div className="card-header">Complaints List</div>
+            <div className="card-header">Resolved Complaints</div>
             <div className="card-body p-0">
               <table className="table table-hover mb-0">
                 <thead>
@@ -134,12 +113,11 @@ export default function ActiveComplaints() {
                     <th>Location</th>
                     <th>Description</th>
                     <th>Image</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>Feedback</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {activeComplaints.map((c) => (
+                  {resolvedComplaints.map((c) => (
                     <tr key={c._id}>
                       <td>{c.category}</td>
                       <td>
@@ -156,48 +134,7 @@ export default function ActiveComplaints() {
                           />
                         )}
                       </td>
-                      <td>
-                        <span
-                          className={
-                            c.status === "In Progress"
-                              ? "text-warning fw-bold"
-                              : "text-secondary fw-bold"
-                          }
-                        >
-                          {c.status}
-                        </span>
-                      </td>
-                      <td>
-                        {c.status === "Pending" && (
-                          <div className="d-flex flex-column">
-                            <button
-                              className="btn btn-sm btn-warning mb-2"
-                              disabled={pendingId === c._id}
-                              onClick={() => handleChange(c._id, "In Progress")}
-                            >
-                              {pendingId === c._id ? "Updating..." : "In Progress"}
-                            </button>
-
-                            <button
-                              className="btn btn-sm btn-success"
-                              disabled={pendingId === c._id}
-                              onClick={() => handleChange(c._id, "Resolved")}
-                            >
-                              {pendingId === c._id ? "Updating..." : "Resolve"}
-                            </button>
-                          </div>
-                        )}
-
-                        {c.status === "In Progress" && (
-                          <button
-                            className="btn btn-sm btn-success"
-                            disabled={pendingId === c._id}
-                            onClick={() => handleChange(c._id, "Resolved")}
-                          >
-                            {pendingId === c._id ? "Updating..." : "Resolve"}
-                          </button>
-                        )}
-                      </td>
+                      <td>{c.feedback || "No feedback provided"}</td>
                     </tr>
                   ))}
                 </tbody>

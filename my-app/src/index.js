@@ -12,6 +12,7 @@ import UserProfile from"./pages/Profile";
 import AboutPage from "./pages/about";
 import User from "./pages/adminProfile";
 import AdminAbout from "./pages/adminAbout";
+import ResolvedComplaints from "./pages/resolvedComplaints";
 
 import "./styles/theme.css";
 import "./index.css";
@@ -25,12 +26,12 @@ root.render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/post-login" element={<PostLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/resolves_complaints" element={<ResolvedComplaints />} />
           <Route path="/student" element={<StudentDashboard />} />
            <Route path="/student/add-complaint" element={<AddComplaint />} />
             <Route path="/student/profile/:id" element={<UserProfile />} />
             <Route path="/about" element={<AboutPage />}/>
             <Route path="/admin/profile/:id" element={<User />} />
-            <Route path="/admin" element={<AdminDashboard />}/>
             <Route path="/admin/about" element={<AdminAbout />}/>
         </Routes>
       </BrowserRouter>
