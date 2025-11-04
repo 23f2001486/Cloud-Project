@@ -6,6 +6,7 @@ import passport from './config/passport.js';
 import complaintRoutes from "./routes/complaint.js";
 import authRoutes from "./routes/auth.js";
 import UserRoutes from "./routes/user.js";
+import geminiRoutes from "./routes/gemini.js";
 //import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,14 +15,14 @@ import { fileURLToPath } from 'url';
 const app = express()
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.listen(3000,()=> {
-    console.log("Started the application!.")
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 /*app.use(cors({
   origin: 'http://localhost:5173', // your frontend origin
   credentials: true               // allow cookies to be sent
 }));*/
-mongoose.connect("mongodb+srv://divya:divya%402006@cluster0.wcjrfzq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(()=>{
+mongoose.connect(process.env.MONGO_URI).then(()=>{
     console.log("Mango db connected")
 }).catch(()=>{
     console.log("Whoopss")
@@ -49,7 +50,7 @@ console.log(process.env.CLOUDINARY_API_SECRET);
 app.use("/complaints", complaintRoutes);
 app.use("/auth",authRoutes);
 app.use("/users",UserRoutes);
-
+app.use("/sensitivity",geminiRoutes);
 app.get('/*path', (req, res, next) => {
   const filePath = path.join(__dirname, 'my-app', 'build', 'index.html');
   res.sendFile(filePath, (err) => {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getComplaints, changeStatus } from "../services/api";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios"; // 👈 added for direct API call to /sensitivity
 
 export default function ActiveComplaints() {
   const { user } = useAuth();
@@ -28,9 +29,28 @@ export default function ActiveComplaints() {
     }
   };
 
+ const fetchComplaintsBySensitivity = async () => {
+  try {
+    setError(null);
+    setLoading(true);
+    const res = await axios.get("/sensitivity/gemini");
+    setComplaints(res.data?.complaints || []);
+  } catch (err) {
+    console.error("Error fetching sensitivity complaints:", err);
+    setError("Failed to fetch complaints by sensitivity");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   useEffect(() => {
-    fetchComplaints();
-  }, []);
+    if (sortBy === "sensitivity") {
+      fetchComplaintsBySensitivity();
+    } else {
+      fetchComplaints();
+    }
+  }, [sortBy]);
 
   const handleChange = async (id, status) => {
     setPendingId(id);
@@ -61,7 +81,7 @@ export default function ActiveComplaints() {
       if (sortBy === "oldest") return new Date(a.createdAt) - new Date(b.createdAt);
       if (sortBy === "category") return a.category.localeCompare(b.category);
       if (sortBy === "block") return a.block_name.localeCompare(b.block_name);
-      return 0;
+      return 0; // sensitivity sorting handled from backend
     });
 
   if (loading) return <p>Loading complaints...</p>;
@@ -115,6 +135,7 @@ export default function ActiveComplaints() {
             <option value="oldest">Oldest First</option>
             <option value="category">Category</option>
             <option value="block">Block</option>
+            <option value="sensitivity"> Sensitivity </option>
           </select>
         </div>
 

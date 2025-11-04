@@ -15,6 +15,26 @@ export default function StudentDashboard() {
   const [feedbackValue, setFeedbackValue] = useState("");
   const [editingComplaintId, setEditingComplaintId] = useState(null);
   const [editForm, setEditForm] = useState({});
+// 🌦️ Weather Widget Component (put just below <header>)
+const [weather, setWeather] = useState(null);
+
+useEffect(() => {
+  const fetchWeather = async () => {
+    try {
+      const apiKey = "afe7cd29cf3bf7439c88320471e2d8bb"; // 🔑 Replace with your actual OpenWeatherMap key
+      const city = "Vellore"; // or dynamic location
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
+      );
+      const data = await res.json();
+      setWeather(data);
+    } catch (err) {
+      console.error("Weather fetch failed:", err);
+    }
+  };
+
+  fetchWeather();
+}, []);
 
   const fetchComplaints = async () => {
     try {
@@ -104,6 +124,34 @@ export default function StudentDashboard() {
           </div>
         </div>
       </header>
+{/* 🌤️ Weather Widget */}
+{weather && (
+  <div className="container mt-3">
+    <div className="alert alert-warning shadow-sm d-flex justify-content-between align-items-center rounded-3">
+      <div>
+        <h6 className="mb-1 fw-bold">
+          {weather.name} Weather: {weather.weather[0].main}
+        </h6>
+        <small>
+          Temp: {weather.main.temp}°C | Feels like: {weather.main.feels_like}°C
+        </small>
+        <br />
+        <strong>
+          {weather.weather[0].main.toLowerCase().includes("rain")
+            ? " It’s raining — don’t leave your clothes outside!"
+            : weather.weather[0].main.toLowerCase().includes("clear")
+            ? " It's sunny — perfect day to dry your clothes!"
+            : " Keep an eye on the weather before leaving your laundry!"}
+        </strong>
+      </div>
+      <img
+        alt="weather icon"
+        src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+        style={{ width: "70px", height: "70px" }}
+      />
+    </div>
+  </div>
+)}
 
       <div className="container mt-4">
         <h2 className="text-primary mb-3"> All Complaints</h2>
