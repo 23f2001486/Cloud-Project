@@ -2,7 +2,7 @@ import React from "react";
 
 export default function LoginPage() {
   const handleGoogleLogin = () => {
-    window.location.href = "/auth/google";
+    window.location.href = "https://cloud-project-yy9b.onrender.com/auth/google";
   };
 
   return (
