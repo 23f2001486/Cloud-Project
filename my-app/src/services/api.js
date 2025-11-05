@@ -1,33 +1,47 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Configure axios to send cookies for session management
-axios.defaults.withCredentials = true;
+// Base URL of your deployed backend
+const BASE_URL = "https://cloud-project-yy9b.onrender.com"; // ✅ Render backend URL
 
-
-// Authentication Endpoints
-export const login = (email, password) => axios.post(`/auth/google`, { email, password });
-export const logout = () => axios.post(`auth/google/logout`);
-export const getAuthStatus = () => axios.get(`/auth/me`);
-
-// Complaint Endpoints
-export const getComplaints = () => axios.get(`/complaints/`);
-export const createComplaint = (formData) => axios.post(`/complaints/create`, formData, {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
+// Configure axios instance
+const api = axios.create({
+  baseURL: `${BASE_URL}`, // most backend routes are usually under /api
+  withCredentials: true,
 });
-// services/api.js
-export const updateComplaint = (id, data) =>
-  axios.put(`/complaints/edit/${id}`, data, {
-    headers: {
-      "Content-Type": "application/json",
-    },
+
+// ==============================
+// 🔐 AUTH ENDPOINTS
+// ==============================
+export const login = (email, password) =>
+  api.post(`/auth/google`, { email, password });
+
+export const logout = () => api.post(`/auth/google/logout`);
+export const getAuthStatus = () => api.get(`/auth/me`);
+
+// ==============================
+// 🧾 COMPLAINT ENDPOINTS
+// ==============================
+export const getComplaints = () => api.get(`/complaints/`);
+
+export const createComplaint = (formData) =>
+  api.post(`/complaints/create`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
 
-export const deleteComplaint = (id) => axios.delete(`/complaints/delete/${id}`);
+export const updateComplaint = (id, data) =>
+  api.put(`/complaints/edit/${id}`, data, {
+    headers: { "Content-Type": "application/json" },
+  });
 
-// Added for changing complaint status
-export const changeStatus = (id, status) => axios.put(`/complaints/edit/status/${id}`, { status });
-export const addFeedback = (id, feedback) => axios.put(`/complaints/edit/feedback/${id}`, { feedback });
-// Get user profile by ID
-export const getUserProfile = (id) => axios.get(`/users/${id}`);
+export const deleteComplaint = (id) => api.delete(`/complaints/delete/${id}`);
+
+export const changeStatus = (id, status) =>
+  api.put(`/complaints/edit/status/${id}`, { status });
+
+export const addFeedback = (id, feedback) =>
+  api.put(`/complaints/edit/feedback/${id}`, { feedback });
+
+// ==============================
+// 👤 USER ENDPOINT
+// ==============================
+export const getUserProfile = (id) => api.get(`/users/${id}`);
