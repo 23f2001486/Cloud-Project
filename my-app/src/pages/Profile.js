@@ -40,7 +40,13 @@ export default function UserProfile() {
           <div>
             <Link className="btn btn-light me-2" to="/student">Dashboard</Link>
             <Link className="btn btn-outline-light me-2" to="/student/add-complaint">+ Add Complaint</Link>
-            <Link className="btn btn-light me-2" to={`/student/profile/${user._id}`}>View Profile</Link>
+            
+          {user && (
+  <Link className="btn btn-light me-2" to={`/student/profile/${user._id}`}>
+    View Profile
+  </Link>
+)}
+
             <Link className="btn btn-light me-2" to={`/about`}>About</Link>
           </div>
         </div>
