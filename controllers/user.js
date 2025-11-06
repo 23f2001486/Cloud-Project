@@ -3,7 +3,7 @@ import User from "../models/user-model.js";
 
 export const getUserProfile = async (req, res) => {
   try {
-    console.log(req);
+    console.log(req.user);
     const { id } = req.user.id;
     console.log(id);// user ID from URL or from auth token
 
