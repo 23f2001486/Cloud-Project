@@ -33,7 +33,7 @@ root.render(
           <Route path="/admin/resolves_complaints" element={<ResolvedComplaints />} />
           <Route path="/student" element={<StudentDashboard />} />
            <Route path="/student/add-complaint" element={<AddComplaint />} />
-            <Route path="/student/profile/:id" element={<UserProfile />} />
+            <Route path="/student/profile" element={<UserProfile />} />
             <Route path="/about" element={<AboutPage />}/>
             <Route path="/admin/profile/:id" element={<User />} />
             <Route path="/admin/about" element={<AdminAbout />}/>
