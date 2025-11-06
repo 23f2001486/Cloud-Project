@@ -3,7 +3,8 @@ import User from "../models/user-model.js";
 
 export const getUserProfile = async (req, res) => {
   try {
-    const { id } = req.user.id; // user ID from URL or from auth token
+    const { id } = req.user.id;
+    console.log(id);// user ID from URL or from auth token
 
     const user = await User.findById(id).select("-__v"); // exclude __v
     if (!user) {
