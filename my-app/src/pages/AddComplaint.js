@@ -133,6 +133,12 @@ export default function AddComplaint() {
             <Link className="btn btn-light me-2" to="/student">Dashboard</Link>
             <Link className="btn btn-outline-light me-2" to="/student/add-complaint">+ Add Complaint</Link>
             <Link className="btn btn-light me-2" to={`/student/profile`}>View Profile</Link>
+   <Link
+              className="btn btn-light me-2"
+              to={`/student/profile/`}
+            >
+              View Profile
+            </Link>
             <Link className="btn btn-light me-2" to={`/about`}>About</Link>
           </div>
         </div>
