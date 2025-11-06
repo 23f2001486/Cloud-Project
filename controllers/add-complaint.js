@@ -3,7 +3,7 @@ import cloudinary from '../config/cloudinary.js';
 import fs from "fs";
 
 export const addComplaint = async (req,res) =>{
-    try {
+ try {
 let result = null;
 
 if (req.file) {

@@ -118,6 +118,13 @@ useEffect(() => {
             >
               View Profile
             </Link>
+            
+            <Link
+              className="btn btn-light me-2"
+              to={`/login`}
+            >
+              Log Out
+            </Link>
             <Link className="btn btn-light me-2" to={`/about`}>
               About
             </Link>

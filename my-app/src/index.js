@@ -11,8 +11,12 @@ import AddComplaint from "./pages/AddComplaint";
 import UserProfile from"./pages/Profile";
 import AboutPage from "./pages/about";
 import User from "./pages/adminProfile";
+import AdminAnnouncement from "./pages/Adminannouncement";
 import AdminAbout from "./pages/adminAbout";
 import ResolvedComplaints from "./pages/resolvedComplaints";
+import AddAnnouncement from "./pages/addAnnouncement";
+import EditAnnouncement from "./pages/editAnnouncement";
+import ViewAnnouncements from "./pages/viewAnnouncements";
 
 import "./styles/theme.css";
 import "./index.css";
@@ -33,6 +37,14 @@ root.render(
             <Route path="/about" element={<AboutPage />}/>
             <Route path="/admin/profile/:id" element={<User />} />
             <Route path="/admin/about" element={<AdminAbout />}/>
+             <Route path="/admin/add-announcement" element={<AddAnnouncement />} />
+          <Route path="/admin/edit-announcement/:id" element={<EditAnnouncement />} />
+
+<Route path="/adminannouncement" element={<AdminAnnouncement />} />
+          {/* Student Routes */}
+
+          {/* ✅ Common View (for students + admin) */}
+          <Route path="/announcements" element={<ViewAnnouncements />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
