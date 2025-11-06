@@ -87,31 +87,36 @@ export default function AddComplaint() {
     validateField(name, value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // ✅ Validate all fields before submit
-    let valid = true;
-    Object.keys(form).forEach((key) => {
-      if (!validateField(key, form[key])) valid = false;
-    });
+  // Validate all fields before submit
+  let valid = true;
+  Object.keys(form).forEach((key) => {
+    if (!validateField(key, form[key])) valid = false;
+  });
 
-    if (!valid) return;
+  if (!valid) return;
 
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      for (const key in form) {
-        if (form[key]) formData.append(key, form[key]);
-      }
-      await createComplaint(formData);
-      navigate("/student");
-    } catch (err) {
-      console.error("Error creating complaint:", err);
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const formData = new FormData();
+    for (const key in form) {
+      if (form[key]) formData.append(key, form[key]);
     }
-  };
+
+    // Add logged-in user's ID
+    formData.append("user", user._id);
+
+    await createComplaint(formData);
+    navigate("/student");
+  } catch (err) {
+    console.error("Error creating complaint:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div>
