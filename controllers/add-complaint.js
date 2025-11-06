@@ -14,7 +14,7 @@ if (req.file) {
 console.log(req.body, req.file, req.user)
 // Create complaint document
 const complaint = new Complaint({
-  user: req.user._id, 
+  user: req.user.id, 
   category: req.body.category,
   block_name: req.body.block_name,
   floor: req.body.floor,
