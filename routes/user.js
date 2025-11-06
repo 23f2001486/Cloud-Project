@@ -1,9 +1,11 @@
 import express from "express";
 import { getUserProfile } from "../controllers/user.js";
+import { verifyToken } from "../middlewares/verifyToken.js"; // ✅ import JWT middleware
 
 const router = express.Router();
 
-// GET user profile by ID
-router.get("/:id", getUserProfile);
+// ✅ Secure user profile route
+router.get("/:id", verifyToken, getUserProfile);
 
 export default router;
+
