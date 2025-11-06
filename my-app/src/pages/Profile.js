@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
 import { getUserProfile } from "../services/api";
 
 export default function UserProfile() {
-  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,7 +9,7 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await getUserProfile(id);
+        const res = await getUserProfile(); // Removed id parameter
         setUser(res.data.user);
       } catch (err) {
         console.error(err);
@@ -21,33 +19,41 @@ export default function UserProfile() {
       }
     };
     fetchUser();
-  }, [id]);
+  }, []);
 
   if (loading)
-    return <p className="text-center mt-5 text-secondary fw-semibold">Loading profile...</p>;
+    return (
+      <p className="text-center mt-5 text-secondary fw-semibold">
+        Loading profile...
+      </p>
+    );
+
   if (error)
-    return <div className="alert alert-danger text-center mt-5">{error}</div>;
+    return (
+      <div className="alert alert-danger text-center mt-5">{error}</div>
+    );
 
   return (
     <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
       {/* ✅ Navigation Bar */}
-            <header className="navbar navbar-custom py-3">
+      <header className="navbar navbar-custom py-3">
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div>
-            <h4 className="text-white mb-0 fw-bold"> Hostel Management</h4>
-            <small className="text-light">Focus on Your Studies, Leave the Rest to Us</small>
+            <h4 className="text-white mb-0 fw-bold">Hostel Management</h4>
+            <small className="text-light">
+              Focus on Your Studies, Leave the Rest to Us
+            </small>
           </div>
           <div>
-            <Link className="btn btn-light me-2" to="/student">Dashboard</Link>
-            <Link className="btn btn-outline-light me-2" to="/student/add-complaint">+ Add Complaint</Link>
-            
-          {user && (
-  <Link className="btn btn-light me-2" to={`/student/profile/${user._id}`}>
-    View Profile
-  </Link>
-)}
-
-            <Link className="btn btn-light me-2" to={`/about`}>About</Link>
+            <a className="btn btn-light me-2" href="/student">
+              Dashboard
+            </a>
+            <a className="btn btn-outline-light me-2" href="/student/add-complaint">
+              + Add Complaint
+            </a>
+            <a className="btn btn-light me-2" href="/about">
+              About
+            </a>
           </div>
         </div>
       </header>
@@ -96,13 +102,12 @@ export default function UserProfile() {
                     </p>
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
         </div>
       </div>
+
       <footer className="text-center mt-5 py-3">
         © {new Date().getFullYear()} Hostel Complaint Management System. All
         rights reserved.
@@ -110,3 +115,4 @@ export default function UserProfile() {
     </div>
   );
 }
+
