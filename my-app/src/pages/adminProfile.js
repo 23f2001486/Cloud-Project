@@ -3,7 +3,6 @@ import { useParams, Link } from "react-router-dom";
 import { getUserProfile } from "../services/api";
 
 export default function UserProfile() {
-  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,7 +10,7 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await getUserProfile(id);
+        const res = await getUserProfile();
         setUser(res.data.user);
       } catch (err) {
         console.error(err);
