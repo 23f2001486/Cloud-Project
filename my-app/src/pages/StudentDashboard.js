@@ -5,22 +5,23 @@ import {
   deleteComplaint,
   updateComplaint,
 } from "../services/api";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function StudentDashboard() {
   const { user: authUser } = useAuth(); // logged-in user
-  const { id: paramId } = useParams(); // optional URL param
-  const userId = paramId && paramId !== "undefined" ? paramId : authUser?._id;
-
   const [complaints, setComplaints] = useState([]);
   const [editingFeedbackId, setEditingFeedbackId] = useState(null);
   const [feedbackValue, setFeedbackValue] = useState("");
   const [editingComplaintId, setEditingComplaintId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [weather, setWeather] = useState(null);
-
   const navigate = useNavigate();
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!authUser) navigate("/login");
+  }, [authUser, navigate]);
 
   // Fetch weather
   useEffect(() => {
@@ -40,11 +41,10 @@ export default function StudentDashboard() {
     fetchWeather();
   }, []);
 
-  // Fetch complaints
+  // Fetch complaints (backend uses JWT to determine user)
   const fetchComplaints = async () => {
-    if (!userId) return;
     try {
-      const res = await getComplaints(userId); // pass userId if your API supports it
+      const res = await getComplaints();
       setComplaints(res.data?.complaints || []);
     } catch (err) {
       console.error("Error fetching complaints:", err);
@@ -52,8 +52,8 @@ export default function StudentDashboard() {
   };
 
   useEffect(() => {
-    fetchComplaints();
-  }, [userId]);
+    if (authUser) fetchComplaints();
+  }, [authUser]);
 
   // Feedback
   const handleFeedbackSave = async (id) => {
@@ -100,10 +100,7 @@ export default function StudentDashboard() {
     }
   };
 
-  if (!authUser) {
-    navigate("/login"); // redirect if not logged in
-    return <p>Redirecting...</p>;
-  }
+  if (!authUser) return <p>Redirecting...</p>;
 
   return (
     <div>
@@ -123,10 +120,7 @@ export default function StudentDashboard() {
             <Link className="btn btn-outline-light me-2" to="/student/add-complaint">
               + Add Complaint
             </Link>
-            <Link
-              className="btn btn-light me-2"
-              to={`/student/profile`}
-            >
+            <Link className="btn btn-light me-2" to={`/student/profile`}>
               View Profile
             </Link>
             <Link className="btn btn-light me-2" to="/login">
@@ -179,12 +173,12 @@ export default function StudentDashboard() {
               <div className="col-md-6 mb-3" key={c._id}>
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    {/* ...existing complaint UI, edit form, feedback, etc. */}
                     <h5 className="card-title text-primary">{c.category}</h5>
                     <p className="card-text">{c.description}</p>
                     <p className="text-muted">
                       Block {c.block_name}, Floor {c.floor}, Room {c.room_number}
                     </p>
+                    {/* Feedback & Edit buttons go here */}
                   </div>
                 </div>
               </div>
@@ -200,4 +194,5 @@ export default function StudentDashboard() {
     </div>
   );
 }
+
 
