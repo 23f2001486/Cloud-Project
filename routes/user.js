@@ -5,7 +5,7 @@ import { verifyToken } from "../middlewares/verifyToken.js"; // ✅ import JWT m
 const router = express.Router();
 
 // ✅ Secure user profile route
-router.get("/:id", verifyToken, getUserProfile);
+router.get("", verifyToken, getUserProfile);
 
 export default router;
 
