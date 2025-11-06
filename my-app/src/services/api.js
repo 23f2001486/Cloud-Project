@@ -32,7 +32,7 @@ export const addFeedback = (id, feedback) =>
   api.put(`/complaints/edit/feedback/${id}`, { feedback });
 
 // User endpoints
-export const getUserProfile = (id) => api.get(`/users/${id}`);
+export const getUserProfile = (id) => api.get(`/users`);
 
 export default api;
 
