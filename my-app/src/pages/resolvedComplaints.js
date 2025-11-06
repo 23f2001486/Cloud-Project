@@ -66,7 +66,7 @@ export default function ResolvedComplaints() {
             <Link className="btn btn-light me-2" to="/admin/resolves_complaints">
               Resolved Complaints
             </Link>
-            <Link className="btn btn-light me-2" to={`/admin/profile/${user._id}`}>
+            <Link className="btn btn-light me-2" to={`/admin/profile`}>
               View Profile
             </Link>
             <Link className="btn btn-light me-2" to={`/admin/about`}>About</Link>
