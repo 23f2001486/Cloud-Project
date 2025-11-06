@@ -41,7 +41,7 @@ export default function StudentDashboard() {
     fetchWeather();
   }, []);
 
-  // Fetch complaints (backend uses JWT to determine user)
+  // Fetch complaints (backend uses JWT to identify user)
   const fetchComplaints = async () => {
     try {
       const res = await getComplaints();
@@ -178,9 +178,9 @@ export default function StudentDashboard() {
                     <p className="text-muted">
                       Block {c.block_name}, Floor {c.floor}, Room {c.room_number}
                     </p>
-                    {/* Feedback & Edit buttons go here */}
                   </div>
                 </div>
+                      
               </div>
             ))}
           </div>
@@ -194,5 +194,4 @@ export default function StudentDashboard() {
     </div>
   );
 }
-
 
