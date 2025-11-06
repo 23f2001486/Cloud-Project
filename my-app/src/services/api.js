@@ -9,7 +9,12 @@ const api = axios.create({
 
 // Auth endpoints
 export const getAuthStatus = (token) =>
-  api.get(`/auth/me?token=${token}`);
+  api.get(`/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
 
 // Complaint endpoints
 export const getComplaints = () => api.get(`/complaints/`);
