@@ -7,7 +7,7 @@ export const getAllComplaints = async (req, res) => {
       complaints = await Complaint.find().populate("user", "name email");
     } 
     else {
-      complaints = await Complaint.find({ user: req.user._id }).populate("user", "name email");
+      complaints = await Complaint.find({ user: req.user.id }).populate("user", "name email");
     }
 
     res.status(200).json({ complaints });
