@@ -6,12 +6,14 @@ import { deleteComplaint } from '../controllers/delete-complaint.js';
 import getAllComplaints from '../controllers/get-complaints.js';
 import changeStatus from '../controllers/change-status.js';
 import { giveFeedback } from '../controllers/feedback-complaint.js';
+import { verifyToken } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
-router.get("/",getAllComplaints);
-router.post("/create",upload.single("image"),addComplaint);
-router.put("/edit/:id", upload.none(), editComplaint);
-router.delete("/delete/:id",deleteComplaint);
-router.put("/edit/status/:id",upload.none(), changeStatus);
-router.put("/edit/feedback/:id",upload.none(),giveFeedback);
+router.get("/", verifyToken, getAllComplaints);
+router.post("/create", verifyToken, upload.single("image"), addComplaint);
+router.put("/edit/:id", verifyToken, upload.none(), editComplaint);
+router.delete("/delete/:id", verifyToken, deleteComplaint);
+router.put("/edit/status/:id", verifyToken, upload.none(), changeStatus);
+router.put("/edit/feedback/:id", verifyToken, upload.none(), giveFeedback);
+
 export default router;
