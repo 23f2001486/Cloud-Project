@@ -114,7 +114,7 @@ useEffect(() => {
             </Link>
             <Link
               className="btn btn-light me-2"
-              to={`/student/profile/${user._id}`}
+              to={`/student/profile/`}
             >
               View Profile
             </Link>
