@@ -51,6 +51,7 @@ export default function UserProfile() {
             <a className="btn btn-outline-light me-2" href="/student/add-complaint">
               + Add Complaint
             </a>
+         <Link className="btn btn-light me-2" to={"/student/profile"}>View Profile</Link>
             <a className="btn btn-light me-2" href="/about">
               About
             </a>
