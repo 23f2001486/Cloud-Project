@@ -1,7 +1,7 @@
 // src/services/api.js
 import axios from "axios";
 
-const BASE_URL = "https://cloud-project-yy9b.onrender.com";
+const BASE_URL = "https://cloud-project-yy9b.onrender.com/users/view";
 
 const api = axios.create({
   baseURL: BASE_URL,
