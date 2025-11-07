@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getUserProfile } from "../services/api";
 
 export default function UserProfile() {
@@ -20,34 +20,47 @@ export default function UserProfile() {
       }
     };
     fetchUser();
-  }, [id]);
+  }, []); // ✅ Removed id dependency, only run once
 
   if (loading)
-    return <p className="text-center mt-5 text-secondary fw-semibold">Loading profile...</p>;
+    return (
+      <p className="text-center mt-5 text-secondary fw-semibold">
+        Loading profile...
+      </p>
+    );
+
   if (error)
     return <div className="alert alert-danger text-center mt-5">{error}</div>;
 
   return (
     <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
       {/* ✅ Navigation Bar */}
-            <header className="navbar navbar-custom py-3">
+      <header className="navbar navbar-custom py-3">
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div>
-            <h4 className="text-white mb-0 fw-bold"> Hostel Management</h4>
-            <small className="text-light">Focus on Your Studies, Leave the Rest to Us</small>
+            <h4 className="text-white mb-0 fw-bold">Hostel Management</h4>
+            <small className="text-light">
+              Focus on Your Studies, Leave the Rest to Us
+            </small>
           </div>
           <div>
-            <Link className="btn btn-light me-2" to="/admin">Active Complaints</Link>
+            <Link className="btn btn-light me-2" to="/admin">
+              Active Complaints
+            </Link>
             <Link className="btn btn-light me-2" to="/admin/resolves_complaints">
               Resolved Complaints
             </Link>
-            <Link className="btn btn-light me-2" to={`/admin/profile`}>View Profile</Link>
-            <Link className="btn btn-light me-2" to={`/admin/about`}>About</Link>
+            <Link className="btn btn-light me-2" to="/admin/profile">
+              View Profile
+            </Link>
+            <Link className="btn btn-light me-2" to="/admin/about">
+              About
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* Profile Section */}
+      {/* ✅ Profile Section */}
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-lg-6">
@@ -55,11 +68,12 @@ export default function UserProfile() {
               <div className="card-header text-center">
                 <h4 className="mb-0">👤 User Profile</h4>
               </div>
+
               <div className="card-body text-center p-4">
                 {/* Profile Picture */}
                 <img
                   src={
-                    user.profilePic?.trim() ||
+                    user?.profilePic?.trim() ||
                     "https://lh3.googleusercontent.com/a/ACg8ocKDFQnayuy20hq9fxklbi1AqX0IxvBIvnvKRl_sc7wkkqKoig=s96-c"
                   }
                   alt="Profile"
@@ -73,31 +87,34 @@ export default function UserProfile() {
                 />
 
                 {/* User Info */}
-                <h5 className="fw-bold text-dark mb-1">{user.name || "N/A"}</h5>
+                <h5 className="fw-bold text-dark mb-1">{user?.name || "N/A"}</h5>
                 <p className="text-muted mb-3">
-                  {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                  {user?.role
+                    ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+                    : "N/A"}
                 </p>
 
                 <div className="d-flex justify-content-center mb-3">
                   <div className="px-3 text-start">
                     <p className="mb-1">
-                      <strong>Email:</strong> {user.email}
+                      <strong>Email:</strong> {user?.email || "N/A"}
                     </p>
                     <p className="mb-1 text-muted">
                       <small>
                         Account Created:{" "}
-                        {new Date(user.createdAt).toLocaleDateString()}
+                        {user?.createdAt
+                          ? new Date(user.createdAt).toLocaleDateString()
+                          : "N/A"}
                       </small>
                     </p>
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
         </div>
       </div>
+
       <footer className="text-center mt-5 py-3">
         © {new Date().getFullYear()} Hostel Complaint Management System. All
         rights reserved.
@@ -105,3 +122,4 @@ export default function UserProfile() {
     </div>
   );
 }
+
