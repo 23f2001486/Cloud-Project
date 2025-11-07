@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUserProfile } from "../services/api";
+import { getUserProfile } from "../services/api";import { Link, useNavigate } from "react-router-dom";
 
 export default function UserProfile() {
   const [user, setUser] = useState(null);
