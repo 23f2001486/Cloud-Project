@@ -21,7 +21,7 @@ const [weather, setWeather] = useState(null);
 useEffect(() => {
   const fetchWeather = async () => {
     try {
-      const apiKey = "afe7cd29cf3bf7439c88320471e2d8bb"; // 🔑 Replace with your actual OpenWeatherMap key
+      const apiKey = ""; // 
       const city = "Vellore"; // or dynamic location
       const res = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
